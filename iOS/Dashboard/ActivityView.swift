@@ -15,7 +15,7 @@ struct ActivityView: View {
     
     var body: some View {
         GeometryReader {geometry in
-            let height = geometry.size.height * 0.5
+            let height = geometry.size.height
             HStack(alignment: .bottom){
                 HStack{
                     AcitivityMetricView(metricColor: Color("BaseRed"),
@@ -47,15 +47,15 @@ struct ActivityView: View {
                 ActivityRingView(activitySummary: activitySummary, size: 60)
                     .frame(width: 0.2 * geometry.size.width,
                            height: geometry.size.height,
-                           alignment: .bottom)
-                    .offset(y: -height * 0.15)
+                           alignment: .center)
+//                    .offset(y: -height * 0.15)
             }
             .frame(width: geometry.size.width,
                    height: height,
                    alignment: .bottom)
             .background(ComponentBackgroundColor())
-            .cornerRadius(15)
-        }.padding(.all, 5)
+            .cornerRadius(8)
+        }
     }
 }
 

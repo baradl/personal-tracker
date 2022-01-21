@@ -8,6 +8,17 @@
 import Foundation
 import HealthKit
 
+//func getActiveLastDays(workouts: Array<HKWorkout>) -> Array<(String, Bool)> {
+//    let dateFormatter = getDateFormatter(format: "E")
+//    let lastDaysStart = getLastDaysStart(date: Date())
+//    let lastSeve
+//    let workoutsLastDays = workouts.filter({ workout in
+//        return workout.startDate > lastDaysStart
+//    })
+//
+//    return [("-", false)]
+//}
+
 func getNumberWeeklyWorkouts(workouts: Array <HKWorkout>) -> Array<(String, Double)> {
     let dateFormatter = getDateFormatter(format: "dd.MM.")
     let weeklyBound = getWeeklyBounds(start: getLastSixWeeksStart(date: Date()))
@@ -74,6 +85,33 @@ func getRunningDistances(workouts: Array<HKWorkout>) -> (thisMonth: Double,
     return (monthValues.last!.1, weekValues, monthValues)
 }
 
+func getWalkingDistances(workouts: Array<HKWorkout>)  -> (thisMonth: Double,
+                                                          weeks: Array<(String, Double)>,
+                                                          months: Array<(String, Double)>) {
+     let weekValues = getWeeklyDistances(workouts: workouts.filter{ workout in
+         return workout.startDate >= getLastSixWeeksStart(date: Date()) && workout.workoutActivityType == .walking
+     })
+     
+     let monthValues = getMonthlyDistances(workouts: workouts.filter{ workout in
+         return workout.startDate >= getLastSixMonthsStart(date: Date()) && workout.workoutActivityType == .walking
+     })
+     
+     return (monthValues.last!.1, weekValues, monthValues)
+}
+
+func getBikingDistances(workouts: Array<HKWorkout>)  -> (thisMonth: Double,
+                                                         weeks: Array<(String, Double)>,
+                                                         months: Array<(String, Double)>) {
+    let weekValues = getWeeklyDistances(workouts: workouts.filter{ workout in
+        return workout.startDate >= getLastSixWeeksStart(date: Date()) && workout.workoutActivityType == .cycling
+    })
+    
+    let monthValues = getMonthlyDistances(workouts: workouts.filter{ workout in
+        return workout.startDate >= getLastSixMonthsStart(date: Date()) && workout.workoutActivityType == .cycling
+    })
+    
+    return (monthValues.last!.1, weekValues, monthValues)
+}
 
 func getWeeklyDistances(workouts: Array<HKWorkout>) -> Array<(String, Double)> {
     let dateFormatter = getDateFormatter(format: "dd.MM.")
@@ -82,16 +120,16 @@ func getWeeklyDistances(workouts: Array<HKWorkout>) -> Array<(String, Double)> {
     var sums: Array<(String, Double)> = []
     
     for bound in weeklyBound {
-        let weekRunning = workouts.filter{workout in
+        let weekDistances = workouts.filter{workout in
             return workout.startDate >= bound.0 && workout.startDate < bound.1
         }
         let weekString = "\(dateFormatter.string(from: bound.0))\n\(dateFormatter.string(from: bound.1))"
         
-        if weekRunning.isEmpty{
+        if weekDistances.isEmpty{
             sums.append((weekString, 0.0))
         } else {
-            let weekSum = weekRunning.reduce(0.0){(distance, workout) in
-                return distance + workout.totalDistance!.doubleValue(for: HKUnit(from: "km"))
+            let weekSum = weekDistances.reduce(0.0){(distance, workout) in
+                return distance + (workout.totalDistance?.doubleValue(for: HKUnit(from: "km")) ?? 0)
             }
             sums.append((weekString, weekSum))
         }
@@ -107,16 +145,16 @@ func getMonthlyDistances(workouts: Array<HKWorkout>) -> Array<(String, Double)> 
     let dateFormatter = getDateFormatter(format: "MMMM")
     
     while startDate <= Date() {
-        let monthRunning = workouts.filter{workout in
+        let monthDistances = workouts.filter{workout in
             return workout.startDate >= startDate && workout.startDate < endDate
         }
     
         let monthString = String(dateFormatter.string(from: startDate).prefix(3))
-        if monthRunning.isEmpty {
+        if monthDistances.isEmpty {
             sums.append((monthString, 0.0))
         } else {
-            let monthSum = monthRunning.reduce(0.0){(distance, workout) in
-                return distance + workout.totalDistance!.doubleValue(for: HKUnit(from: "km"))
+            let monthSum = monthDistances.reduce(0.0){(distance, workout) in
+                return distance + (workout.totalDistance?.doubleValue(for: HKUnit(from: "km")) ?? 0)
             }
             sums.append((monthString,  monthSum))
         }

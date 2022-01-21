@@ -27,9 +27,6 @@ struct WorkoutHistoryView : View {
                     SingleMetricView(title: "Cardio",
                                      valueString: String(dataModel.workoutData.getNumberWorkoutTypes(index: monthIndex).cardio),
                                       unitString: "")
-                    SingleMetricView(title: "Long Walks",
-                                     valueString: String(dataModel.workoutData.getNumberWorkoutTypes(index: monthIndex).walks),
-                                      unitString: "")
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height * 0.08)
                 .padding(.vertical, 10)
@@ -211,7 +208,7 @@ struct WorkoutsView : View {
                                                             unit: "km")
                                            })
                         default:
-                            fatalError("Workout Type not recognized by Application! \(workout.workoutActivityType)")
+                            let _ = print("Workout Type not to be displayed: \(workout.workoutActivityType)")
                         }
                     }
                 }

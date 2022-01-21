@@ -17,29 +17,65 @@ struct WorkoutData {
     var runningDistanceWeeks : Array<(String, Double)> = []
     var runningDistanceMonths : Array<(String, Double)> = []
     
+    var walkingDistanceThisMonth: Double = 0.0
+    var walkingDistanceMonths : Array<(String, Double)> = []
+    
+    var bikingDistanceThisMonth: Double = 0.0
+    var bikingDistanceMonths : Array<(String, Double)> = []
     
     func getWorkouts(index: Int) -> Array<HKWorkout> {
         let monthIndex = self.workoutsPerMonth.count - 1 - index
         if monthIndex >= 0 && monthIndex < self.workoutsPerMonth.count {
-            return self.workoutsPerMonth[monthIndex].1
+            return self.workoutsPerMonth[monthIndex].1.filter({workout in
+                    return workout.workoutActivityType != .walking && workout.workoutActivityType != .cycling
+                })
         } else {
             let workouts : Array<HKWorkout> = []
             return workouts
         }
     }
     
+    func getMovementWorkouts(index: Int) -> Array<HKWorkout> {
+        let monthIndex = self.workoutsPerMonth.count - 1 - index
+        if monthIndex >= 0 && monthIndex < self.workoutsPerMonth.count {
+            return self.workoutsPerMonth[monthIndex].1.filter({workout in
+                return workout.workoutActivityType == .walking ||
+                       workout.workoutActivityType == .cycling
+                       
+                })
+        } else {
+            let workouts : Array<HKWorkout> = []
+            return workouts
+        }
+    }
+    
+    func getFlexibilityWorkouts(index: Int) -> Array<HKWorkout> {
+        let monthIndex = self.workoutsPerMonth.count - 1 - index
+        if monthIndex >= 0 && monthIndex < self.workoutsPerMonth.count {
+            return self.workoutsPerMonth[monthIndex].1.filter({workout in
+                return workout.workoutActivityType == .flexibility ||
+                       workout.workoutActivityType == .yoga
+                })
+        } else {
+            let workouts : Array<HKWorkout> = []
+            return workouts
+        }
+    }
+    
+    func getAllFlexibilityWorkouts()-> Array<HKWorkout> {
+        return self.workoutsPerMonth.map( {(month, workout) -> Array<HKWorkout> in
+            return workout
+        }).flatMap{$0}.filter({workout in
+            return workout.workoutActivityType == .flexibility || workout.workoutActivityType == .yoga
+        })
+    }
+
+    
     func getRunningDistance(index: Int) -> Double {
         let runningWorkouts = getRunningWorkouts(index: index)
         return runningWorkouts.reduce(0){(sum, workout) in
             return sum + workout.totalDistance!.doubleValue(for: HKUnit(from: "km"))
         }
-//        let monthIndex = self.workoutsPerMonth.count - 1 - index
-//        if monthIndex >= 0 && monthIndex < self.workoutsPerMonth.count {
-//
-//        }
-//        else {
-//            return 0
-//        }
     }
     
     func getRunningWorkouts(index: Int) -> Array<HKWorkout>{
@@ -54,7 +90,7 @@ struct WorkoutData {
     }
     
     
-    func getNumberWorkoutTypes(index: Int) -> (strength: Int, runs: Int, cardio: Int, walks: Int) {
+    func getNumberWorkoutTypes(index: Int) -> (strength: Int, runs: Int, cardio: Int) {
         let monthIndex = self.workoutsPerMonth.count - 1 - index
         if monthIndex >= 0 && monthIndex < self.workoutsPerMonth.count {
             let workouts = self.workoutsPerMonth[monthIndex].1
@@ -70,13 +106,9 @@ struct WorkoutData {
                 return workout.workoutActivityType == .mixedCardio
             }).count
             
-            let walks = workouts.filter({workout in
-                return workout.workoutActivityType == .walking
-            }).count
-            
-            return (strength, runs, cardio, walks)
+            return (strength, runs, cardio)
         } else {
-            return (0, 0, 0, 0)
+            return (0, 0, 0)
         }
     }
     

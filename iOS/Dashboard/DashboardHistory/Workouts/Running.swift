@@ -118,7 +118,8 @@ struct DistanceWorkoutView : View {
                                     }
                                 } else {
                                     for index in 0 ..< locations.count {
-                                        if index % Int(locations.count/4) == 0 {
+                                        
+                                        if locations.count>=4 && index % Int(locations.count/4) == 0 {
                                             self.points.append(Location(location: locations[index], color: Color("BrightOrange")))
                                         }
                                     }

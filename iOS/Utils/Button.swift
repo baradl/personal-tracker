@@ -7,6 +7,18 @@
 
 import SwiftUI
 
+struct DistanceWorkoutButton: View {
+    var body: some View {
+        GeometryReader{ geometry in
+            Text("")
+                .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
+                .background(ComponentBackgroundColor())
+                .cornerRadius(18)
+        }
+    }
+}
+
+
 struct AddButton: View {
     let offsetValue: CGFloat = 6
     let cornerRadius: CGFloat = 5
@@ -35,6 +47,51 @@ struct AddButton: View {
                 .font(Font.title.weight(.bold))
                 .frame(width: height * 0.5, height: height * 0.5, alignment: .center)
                 .frame(width: width, height: height)
+        }
+    }
+}
+
+struct MainViewButton:  View {
+    let imageString: String
+    let title: String
+    let dataLeft: String
+    let dataMiddle: String
+    let dataRight: String
+
+    var body: some View {
+        GeometryReader{ geometry in
+            ZStack{
+                VStack(alignment: .leading, spacing: 30){
+                    Divider()
+                    HStack(alignment: .center){
+                        Image(imageString)
+                            .renderingMode(.original)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                        Text(title)
+                            .font(.headline)
+                            .foregroundColor(Color(.white))
+                            .padding(.leading, 30)
+                    }
+                    HStack(alignment: .bottom){
+                        Text(dataLeft)
+                            .font(.body)
+                            .foregroundColor(Color(.white))
+                        Spacer()
+                        Text(dataMiddle)
+                            .font(.body)
+                            .foregroundColor(Color(.white))
+                        Spacer()
+                        Text(dataRight)
+                            .font(.body)
+                            .foregroundColor(Color(.white))
+                    }
+                }.padding(.horizontal, 20)
+                .foregroundColor(Color("ComponentBackgroundColor"))
+            }
+            
+            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .topLeading)
         }
     }
 }

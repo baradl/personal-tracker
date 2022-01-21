@@ -64,13 +64,15 @@ struct ValueAnimationView : View {
                     .padding()
                  Spacer()
                  Text("\(value)\(unit)")
-                    .foregroundColor(Color("TextColor"))
+                    .foregroundColor(color)
                     .font(.system(size: 40, weight: .light))
                  Spacer()
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
-            .background(color)
-            .cornerRadius(15.0)
+            .background(ComponentBackgroundColor())
+            .overlay(RoundedRectangle(cornerRadius: 10.0).stroke(color))
+//            .border(color)
+//            .cornerRadius(10.0)
         }
         .padding(.all, 15)
     }

@@ -126,12 +126,6 @@ struct ConfirmBeverageView : View {
             let timestamp = Date()
             GeometryReader{geometry in
                 VStack(alignment: .center){
-                    Text("\(selectedPortionsize)ml of \(beverage.name)")
-                        .font(.title3)
-                    Text("Water: \(water)ml, Caffeine: \(caffeine)mg")
-                        .font(.footnote)
-                    Text("Timestamp: \(dateFormatter.string(from: timestamp))")
-                        .font(.footnote)
                     HStack{
                         Button(action: {
                             withAnimation(.easeInOut){
@@ -160,6 +154,12 @@ struct ConfirmBeverageView : View {
                     }
                     .frame(width: geometry.size.width, height: 40, alignment: .center)
                     .padding(.vertical, 10)
+                    Text("\(selectedPortionsize)ml of \(beverage.name)")
+                        .font(.title3)
+                    Text("Water: \(water)ml, Caffeine: \(caffeine)mg")
+                        .font(.footnote)
+                    Text("Timestamp: \(dateFormatter.string(from: timestamp))")
+                        .font(.footnote)
                 }
                 .offset(y: -30)
             }

@@ -22,7 +22,6 @@ struct StationaryWorkoutView : View {
     
     var body: some View {
         GeometryReader {geometry in
-            let _ = print(workout)
             VStack{
                 WorkoutTitleView(workout: workout,
                                  imageString: imageString,

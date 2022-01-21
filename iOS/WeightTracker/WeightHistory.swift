@@ -21,7 +21,10 @@ struct HistoryWeightView: View {
             ForEach(weightsByYear, id: \.self){weightsYear in
                 if weightsYear.count != 0 {
                     let currentYear = Calendar.current.dateComponents([.year], from: weightsYear[0].timestamp).year!
-                    if currentYear == 2021 {
+//                    if currentYear == 2022 {
+//                        let _ = print(
+//                    }
+                    if currentYear == 2022 {
                         Section(header: YearBreakView(year: currentYear,
                                                       textSize: listTextSize)){
                             ForEach(weightsYear, id: \.id) {weight in
@@ -84,7 +87,7 @@ struct YearBreakView : View {
 }
 
 func splitWeightsIntoYears(weights: Array<Weight>) -> Array<Array<Weight>> {
-    let years = [2021, 2020, 2019, 2018, 2017, 2016, 2015]
+    let years = [2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015]
     var weightsByYear: Array<Array<Weight>> = []
     for year in years {
         let weightsYear = weights.filter{weight in

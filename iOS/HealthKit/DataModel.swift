@@ -192,9 +192,16 @@ class DataModel : ObservableObject {
     
     
     func updateWorkoutData(workouts: Array<HKWorkout>){
-        let distances = getRunningDistances(workouts: workouts)
+        let runningDistances = getRunningDistances(workouts: workouts)
+        let walkingDistances = getWalkingDistances(workouts: workouts)
+        let bikingDistances = getBikingDistances(workouts: workouts)
+        
         let workoutsPerMonth = getWorkoutsPerMonth(workouts: workouts)
-        let numberWorkoutsPerWeek = getNumberWeeklyWorkouts(workouts: workouts)
+        let numberWorkoutsPerWeek = getNumberWeeklyWorkouts(workouts: workouts.filter({workout in
+            return workout.workoutActivityType == .functionalStrengthTraining ||
+                   workout.workoutActivityType == .running ||
+                   workout.workoutActivityType == .mixedCardio
+        }))
         let numberWorkoutsPerMonth = getNumberMonthlyWorkouts(workoutsPerMonth: workoutsPerMonth)
         
         DispatchQueue.main.async {
@@ -202,9 +209,15 @@ class DataModel : ObservableObject {
             self.workoutData.numberWorkoutsPerWeek = numberWorkoutsPerWeek
             self.workoutData.numberWorkoutsPerMonth = numberWorkoutsPerMonth
             
-            self.workoutData.runningDistanceThisMonth = distances.thisMonth
-            self.workoutData.runningDistanceWeeks = distances.weeks
-            self.workoutData.runningDistanceMonths = distances.months
+            self.workoutData.runningDistanceThisMonth = runningDistances.thisMonth
+            self.workoutData.runningDistanceWeeks = runningDistances.weeks
+            self.workoutData.runningDistanceMonths = runningDistances.months
+            
+            self.workoutData.bikingDistanceThisMonth = bikingDistances.thisMonth
+            self.workoutData.bikingDistanceMonths = bikingDistances.months
+            
+            self.workoutData.walkingDistanceThisMonth = walkingDistances.thisMonth
+            self.workoutData.walkingDistanceMonths = walkingDistances.months
         }
     }
     
@@ -263,12 +276,6 @@ class DataModel : ObservableObject {
             }
         }
     }
-
-//    static func == (lhs: DataModel, rhs: DataModel) -> Bool {
-//        return
-//            lhs.dailySumDataToday == rhs.dailySumDataToday &&
-//            lhs.dailySumDataHistory == rhs.dailySumDataHistory
-//    }
     
     func setTodaysBeverages(todaysBeverages: UserDefaults){
         if todaysBeverages.array(forKey: "beverages") == nil || todaysBeverages.array(forKey: "timestamps") == nil{

@@ -161,13 +161,11 @@ func updateUIWorkouts(_ hkWorkouts: [HKWorkout], dataModel: DataModel){
     for hkWorkout in hkWorkouts{
         if hkWorkout.workoutActivityType == .running ||
             hkWorkout.workoutActivityType == .functionalStrengthTraining ||
-                hkWorkout.workoutActivityType == .mixedCardio{
-            workouts.append(hkWorkout)
-        }
-        else if hkWorkout.workoutActivityType == .walking && hkWorkout.duration >= 30*60{
-            workouts.append(hkWorkout)
-        }
-        else if hkWorkout.workoutActivityType == .cycling && hkWorkout.totalDistance!.doubleValue(for: HKUnit(from: "km")) >= 5{
+            hkWorkout.workoutActivityType == .mixedCardio ||
+            hkWorkout.workoutActivityType == .walking ||
+            hkWorkout.workoutActivityType == .cycling ||
+            hkWorkout.workoutActivityType == .flexibility ||
+            hkWorkout.workoutActivityType == .yoga {
             workouts.append(hkWorkout)
         }
     }
